@@ -19,6 +19,12 @@ jobs:
             base64 -d "$f" > "$out"
             git rm -q "$f"
           done
+          for first in b64/**/*.b64.part00; do
+            base="${first%.part00}"; out="${base#b64/}"; out="${out%.b64}"
+            mkdir -p "$(dirname "$out")"
+            cat $(ls "$base".part* | sort) | base64 -d > "$out"
+            git rm -q "$base".part*
+          done
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
           git add -A
